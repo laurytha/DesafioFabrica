@@ -102,5 +102,60 @@
         </section>
     </div>
 </body>
+<script>
+    const ul = document.getElementById('nameRecord');
+    //const url = 'https://randomuser.me/api/?results=10';
 
+    const seeRecordsDiv = document.querySelector('.seeRecordsDiv')
+
+    const seeRecordsUl = document.createElement('ul')
+        seeRecordsDiv.appendChild(seeRecordsUl)
+    
+    function clearRecordsUl() {
+        seeRecordsUl.innerHTML = ''
+    }
+
+    function atualizarRecords() {
+        clearRecordsUl()
+        getRecords()
+    }
+
+    function deleteAllRecords() {
+        fetch('https://randomuser.me/api/?results=10', {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+    }
+
+    function postRecords()  {
+        let nameInput = document.querySelector('#newRecordFirstName').value
+
+        const body = new FormData();
+        body.append("name", nameInput);
+        body.append("description", '');
+        
+        fetch('https://randomuser.me/api/?results=10', { method: 'POST', body })
+            .then(response => response.json())
+            .then(data => {
+                atualizarRecords()
+                document.querySelector('#newRecordFirstName').value = ''
+            })
+    }
+    
+    function getRecords() {
+        fetch('https://randomuser.me/api/?results=10')
+            .then(response => response.json())
+            .then(data => {
+                for(i=0; i < data.records.length; i++) {
+                    const nameRecords = data.records[i].name
+
+                    const seeRecordsLi = document.createElement('li')
+                    seeRecordsLi.innerText = nameRecords
+                    seeRecordsUl.appendChild(seeRecordsLi)
+                }
+            })
+    }
+    getRecords()
+</script>
 </html>
